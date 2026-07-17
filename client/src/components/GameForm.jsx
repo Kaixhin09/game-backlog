@@ -22,143 +22,155 @@ function GameForm({ onGameAdded }) {
     const [submitting, setSubmitting] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const fetchCoverImage = async (title) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/cover-search?title=${encodeURIComponent(title)}`);
+            const data = await res.json();
+            return data.coverImage || "";
+        } catch (err) {
+            console.error("Error fetching cover image:", err);
+            return "";
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const response = await fetch('http://localhost:5000/api/games', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            const newGame = await response.json();
+            const coverImage = await fetchCoverImage(formData.title);
 
-            if (!response.ok) {
-                throw new Error(newGame.message || 'Failed to add game');
-            }
-
-            onGameAdded(newGame);
-            setFormData({
-                title: '',
-                platform: '',
-                status: 'Not Started',
-                rating: '',
-                hoursPlayed: '',
-                notes: ''
-            });
-        } catch (error) {
-            console.error('Error adding game:', error);
+            const res = await fetch("http://localhost:5000/api/games", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...formData, coverImage }),
+        });
+        const newGame = await res.json();
+        onGameAdded(newGame);
+        setFormData({
+            title: "",
+            platform: "",
+            genre: "",
+            status: "Not Started",
+            rating: "",
+            hoursPlayed: "",
+            notes: "",
+            coverImage: "",
+        });
+         } catch (err) {
+            console.error("Error adding game:", err);
         } finally {
             setSubmitting(false);
         }
     };
 
     return (
-        <Box p={4}>
-            <Heading mb={4}>Add New Game</Heading>
-            <form onSubmit={handleSubmit}>
-                <VStack spacing={4}>
-                    <Box w="100%">
-                        <Box as="label" display="block" mb={2}>
-                            Title
-                        </Box>
-                        <Input
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            required
-                        />
+    <Box className="game-form-container" p={4}>
+        <Heading mb={4} className="game-form-title">Add New Game</Heading>
+        <form className="game-form" onSubmit={handleSubmit}>
+            <VStack spacing={4}>
+                <Box className="form-field" w="100%">
+                    <Box as="label" className="form-label" display="block" mb={2}>
+                        Title
                     </Box>
-                    <Box w="100%">
-                        <Box as="label" display="block" mb={2}>
-                            Platform
-                        </Box>
-                        <Box
-                            as="select"
-                            name="platform"
-                            value={formData.platform}
-                            onChange={handleChange}
-                            width="100%"
-                            padding="0.5rem"
-                            borderWidth="1px"
-                            borderRadius="md"
-                        >
-                            <option value="">Select a platform</option>
-                            {platformOptions.map((platform) => (
-                                <option key={platform} value={platform}>
-                                    {platform}
-                                </option>
-                            ))}
-                        </Box>
+                    <Input
+                        className="form-input"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        required
+                    />
+                </Box>
+                <Box className="form-field" w="100%">
+                    <Box as="label" className="form-label" display="block" mb={2}>
+                        Platform
                     </Box>
-                    <Box w="100%">
-                        <Box as="label" display="block" mb={2}>
-                            Status
-                        </Box>
-                        <Box
-                            as="select"
-                            name="status"
-                            value={formData.status}
-                            onChange={handleChange}
-                            width="100%"
-                            padding="0.5rem"
-                            borderWidth="1px"
-                            borderRadius="md"
-                        >
-                            {statusOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </Box>
+                    <Box
+                        as="select"
+                        className="form-select"
+                        name="platform"
+                        value={formData.platform}
+                        onChange={handleChange}
+                        width="100%"
+                        padding="0.5rem"
+                        borderWidth="1px"
+                        borderRadius="md"
+                    >
+                        <option value="">Select a platform</option>
+                        {platformOptions.map((platform) => (
+                            <option key={platform} value={platform}>
+                                {platform}
+                            </option>
+                        ))}
                     </Box>
-                    <Box w="100%">
-                        <Box as="label" display="block" mb={2}>
-                            Rating
-                        </Box>
-                        <Input
-                            name="rating"
-                            type="number"
-                            min="0"
-                            max="10"
-                            value={formData.rating}
-                            onChange={handleChange}
-                        />
+                </Box>
+                <Box className="form-field" w="100%">
+                    <Box as="label" className="form-label" display="block" mb={2}>
+                        Status
                     </Box>
-                    <Box w="100%">
-                        <Box as="label" display="block" mb={2}>
-                            Hours Played
-                        </Box>
-                        <Input
-                            name="hoursPlayed"
-                            type="number"
-                            value={formData.hoursPlayed}
-                            onChange={handleChange}
-                        />
+                    <Box
+                        as="select"
+                        className="form-select"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        width="100%"
+                        padding="0.5rem"
+                        borderWidth="1px"
+                        borderRadius="md"
+                    >
+                        {statusOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </Box>
-                    <Box w="100%">
-                        <Box as="label" display="block" mb={2}>
-                            Notes
-                        </Box>
-                        <Textarea
-                            name="notes"
-                            value={formData.notes}
-                            onChange={handleChange}
-                        />
+                </Box>
+                <Box className="form-field" w="100%">
+                    <Box as="label" className="form-label" display="block" mb={2}>
+                        Rating
                     </Box>
-                    <Button type="submit" isLoading={submitting}>
-                        Add Game
-                    </Button>
-                </VStack>
-            </form>
-        </Box>
-    );
+                    <Input
+                        className="form-input"
+                        name="rating"
+                        type="number"
+                        min="0"
+                        max="10"
+                        value={formData.rating}
+                        onChange={handleChange}
+                    />
+                </Box>
+                <Box className="form-field" w="100%">
+                    <Box as="label" className="form-label" display="block" mb={2}>
+                        Hours Played
+                    </Box>
+                    <Input
+                        className="form-input"
+                        name="hoursPlayed"
+                        type="number"
+                        value={formData.hoursPlayed}
+                        onChange={handleChange}
+                    />
+                </Box>
+                <Box className="form-field" w="100%">
+                    <Box as="label" className="form-label" display="block" mb={2}>
+                        Notes
+                    </Box>
+                    <Textarea
+                        className="form-textarea"
+                        name="notes"
+                        value={formData.notes}
+                        onChange={handleChange}
+                    />
+                </Box>
+                <Button className="btn-submit" type="submit" loading={submitting}>
+                    Add Game
+                </Button>
+            </VStack>
+        </form>
+    </Box>
+);
 }
-
 export default GameForm;

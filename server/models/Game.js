@@ -26,6 +26,10 @@ const gameSchema = new mongoose.Schema({
     notes: {
         type: String,
     },
+    coverImage: {
+        type: String,
+        default: '',
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Game', gameSchema);

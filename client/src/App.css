@@ -1,184 +1,282 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* ---------- Base ---------- */
+:root {
+  --bg: #12121a;
+  --surface: #1c1c28;
+  --surface-hover: #23232f;
+  --border: #2c2c3a;
+  --text-primary: #EDEDF2;
+  --text-muted: #8A8A9E;
+  --accent: #7C6AEF;
+  --accent-hover: #9384f2;
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+  --status-not-started: #6B7280;
+  --status-in-progress: #F5A623;
+  --status-completed: #34D399;
+  --status-dropped: #F43F5E;
+
+  --font-heading: 'Sora', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
-.hero {
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+/* ---------- Layout ---------- */
+.backlog-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.backlog-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.85rem;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+/* ---------- Form (shared: add form + edit modal) ---------- */
+.game-form-container,
+.edit-modal-body {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.game-form-container {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.game-form-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px !important;
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--accent) !important;
+  outline: none;
+  box-shadow: 0 0 0 1px var(--accent) !important;
+}
+
+.btn-submit,
+.btn-save {
+  background: var(--accent) !important;
+  color: white !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 8px !important;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-submit:hover,
+.btn-save:hover {
+  background: var(--accent-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------- Search + Filters ---------- */
+.search-input {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px !important;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.filter-btn {
+  border-radius: 20px !important;
+  font-size: 0.8rem !important;
+  font-family: var(--font-body);
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+  background: transparent !important;
+  transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent) !important;
+  color: var(--text-primary) !important;
+}
+
+.filter-btn.is-active {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: white !important;
+}
+
+/* ---------- Game grid + cards (the "cartridge shelf") ---------- */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.game-card {
   position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-left: 5px solid var(--status-not-started) !important;
+  border-radius: 10px !important;
+  padding-left: 1.25rem !important;
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
-#center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+.game-card:hover {
+  background: var(--surface-hover) !important;
+  transform: translateY(-2px);
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
+/* Spine color per status — the signature element */
+.game-card--not-started { border-left-color: var(--status-not-started) !important; }
+.game-card--in-progress { border-left-color: var(--status-in-progress) !important; }
+.game-card--completed   { border-left-color: var(--status-completed) !important; }
+.game-card--dropped     { border-left-color: var(--status-dropped) !important; }
 
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+.game-card-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.game-card-meta {
+  font-family: var(--font-mono) !important;
+  color: var(--text-muted) !important;
+  font-size: 0.78rem !important;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+.game-card-notes {
+  color: var(--text-muted) !important;
+  font-style: italic;
+  font-size: 0.85rem !important;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px !important;
 }
 
-.ticks {
-  position: relative;
+.game-card-actions {
+  gap: 0.5rem;
+}
+
+.btn-delete {
+  border-color: var(--status-dropped) !important;
+  color: var(--status-dropped) !important;
+  background: transparent !important;
+  border-radius: 8px !important;
+}
+
+.btn-delete:hover {
+  background: var(--status-dropped) !important;
+  color: white !important;
+}
+
+.btn-edit {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: transparent !important;
+  border-radius: 8px !important;
+}
+
+.btn-edit:hover {
+  background: var(--accent) !important;
+  color: white !important;
+}
+
+.empty-state {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 3rem 0;
+  font-style: italic;
+}
+
+/* ---------- Edit modal ---------- */
+.edit-modal {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+}
+
+.edit-modal-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px);
+}
+
+.btn-cancel {
+  color: var(--text-muted) !important;
+  border-color: var(--border) !important;
+}
+.form-select-trigger {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px !important;
   width: 100%;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+.form-select-content {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+.form-select-item {
+  color: var(--text-primary) !important;
+  cursor: pointer;
+}
+
+.form-select-item:hover,
+.form-select-item[data-highlighted] {
+  background: var(--accent) !important;
+  color: white !important;
+}
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .game-grid {
+    grid-template-columns: 1fr;
   }
 }

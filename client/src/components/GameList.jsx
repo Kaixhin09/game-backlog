@@ -122,12 +122,13 @@ function GameList() {
     .filter((game) => game.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
 
-  return (
-    <Box p={4}>
-      <Heading as="h2" size="lg" mb={4}>My Game Backlog</Heading>
+return (
+    <Box className="backlog-container" p={4}>
+      <Heading as="h2" size="lg" mb={4} className="backlog-title">My Game Backlog</Heading>
       <GameForm onGameAdded={handleGameAdded} />
 
       <Input
+        className="search-input"
         placeholder="Search by title..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -135,11 +136,12 @@ function GameList() {
       />
 
       {/* Filter controls */}
-      <Flex mt={2} mb={2} align="center" wrap="wrap">
-        <Text mr={2}>Filter by Status:</Text>
+      <Flex className="filter-row filter-row--status" mt={2} mb={2} align="center" wrap="wrap">
+        <Text className="filter-label" mr={2}>Filter by Status:</Text>
         {filterOptions.map((option) => (
           <Button
             key={option.value}
+            className={`filter-btn filter-btn--status ${filter === option.value ? 'is-active' : ''}`}
             size="sm"
             onClick={() => setFilter(option.value)}
             variant={filter === option.value ? 'solid' : 'outline'}
@@ -153,8 +155,8 @@ function GameList() {
       </Flex>
 
       {/* Sort controls */}
-      <Flex mt={2} mb={4} align="center" wrap="wrap">
-        <Text mr={2}>Sort by:</Text>
+      <Flex className="filter-row filter-row--sort" mt={2} mb={4} align="center" wrap="wrap">
+        <Text className="filter-label" mr={2}>Sort by:</Text>
         {[
           { label: 'Rating', value: 'rating' },
           { label: 'Hours Played', value: 'hoursPlayed' },
@@ -162,6 +164,7 @@ function GameList() {
         ].map((option) => (
           <Button
             key={option.value}
+            className={`filter-btn filter-btn--sort ${sortBy === option.value ? 'is-active' : ''}`}
             size="sm"
             onClick={() => setSortBy(option.value)}
             variant={sortBy === option.value ? 'solid' : 'outline'}
@@ -173,12 +176,14 @@ function GameList() {
           </Button>
         ))}
       </Flex>
+
       {/* Platform filter controls */}
-      <Flex mt={2} mb={4} align="center" wrap="wrap">
-        <Text mr={2}>Filter by Platform:</Text>
+      <Flex className="filter-row filter-row--platform" mt={2} mb={4} align="center" wrap="wrap">
+        <Text className="filter-label" mr={2}>Filter by Platform:</Text>
         {platformOptions.map((platform) => (
           <Button
             key={platform}
+            className={`filter-btn filter-btn--platform ${platformFilter === platform ? 'is-active' : ''}`}
             size="sm"
             onClick={() => setPlatformFilter(platform)}
             variant={platformFilter === platform ? 'solid' : 'outline'}
@@ -192,73 +197,93 @@ function GameList() {
       </Flex>
 
       {displayedGames.length === 0 ? (
-        <Text>No games match this filter.</Text>
+        <Text className="empty-state">No games match this filter.</Text>
       ) : (
-        displayedGames.map((game) => (
-          <Box
-            key={game._id ?? `${game.title}-${game.platform}-${game.createdAt ?? ''}`}
-            p={4}
-            mb={4}
-            borderWidth="1px"
-            borderRadius="md"
-            shadow="sm"
-          >
-            <Flex justify="space-between" align="flex-start">
-              <Box>
-                <Heading as="h3" size="md" mb={1}>
-                  {game.title}
-                </Heading>
-                <Text fontSize="sm" color="gray.500">
-                  {game.platform}
-                  {game.rating ? ` · ${game.rating}/10` : ''}
-                  {game.hoursPlayed ? ` · ${game.hoursPlayed}h played` : ''}
-                </Text>
-                {game.notes && (
-                  <Text fontSize="sm" mt={2}>
-                    {game.notes}
+        <Box className="game-grid">
+          {displayedGames.map((game) => (
+            <Box
+              key={game._id ?? `${game.title}-${game.platform}-${game.createdAt ?? ''}`}
+              className={`game-card game-card--${game.status.toLowerCase().replace(/\s+/g, '-')}`}
+              p={4}
+              mb={4}
+              borderWidth="1px"
+              borderRadius="md"
+              shadow="sm"
+            >
+              {/* Display cover image if available */}
+              {game.coverImage && (
+              <Box
+                as="img"
+                src={game.coverImage}
+                alt={game.title}
+                className="game-card-cover"
+                w="100%"
+                h="140px"
+                objectFit="cover"
+                borderRadius="6px"
+                mb={3}
+                />
+              )}
+              <Flex justify="space-between" align="flex-start">
+                <Box className="game-card-info">
+                  <Heading as="h3" size="md" mb={1} className="game-card-title">
+                    {game.title}
+                  </Heading>
+                  <Text className="game-card-meta" fontSize="sm" color="gray.500">
+                    {game.platform}
+                    {game.rating ? ` · ${game.rating}/10` : ''}
+                    {game.hoursPlayed ? ` · ${game.hoursPlayed}h played` : ''}
                   </Text>
-                )}
-              </Box>
-              <Badge
-                colorPalette={getStatusColorPalette(game.status)}
-                onClick={() => handleStatusCycle(game)}
-                cursor="pointer"
-              >
-                {game.status}
-              </Badge>
-            </Flex>
-            <Flex mt={3}>
-              <Button
-                size="sm"
-                colorPalette="red"
-                variant="outline"
-                onClick={() => handleGameDeleted(game._id)}
-              >
-                Delete Game
-              </Button>
-              <Button
-                size="sm"
-                colorPalette="blue"
-                variant="outline"
-                ml={2}
-                onClick={() => setEditingGame(game)}
-              >
-                Edit Game
-              </Button>
-            </Flex>
-            {editingGame && (
-              <EditGameModal
-                isOpen={!!editingGame}
-                onClose={() => setEditingGame(null)}
-                game={editingGame}
-                onGameUpdated={handleGameUpdated}
-              />
-            )}
-          </Box>
-        ))
+                  {game.notes && (
+                    <Text className="game-card-notes" fontSize="sm" mt={2}>
+                      {game.notes}
+                    </Text>
+                  )}
+                </Box>
+                <Badge
+                  className="status-badge"
+                  colorPalette={getStatusColorPalette(game.status)}
+                  onClick={() => handleStatusCycle(game)}
+                  cursor="pointer"
+                >
+                  {game.status}
+                </Badge>
+              </Flex>
+              <Flex className="game-card-actions" mt={3}>
+                <Button
+                  className="btn-delete"
+                  size="sm"
+                  colorPalette="red"
+                  variant="outline"
+                  onClick={() => handleGameDeleted(game._id)}
+                >
+                  Delete Game
+                </Button>
+                <Button
+                  className="btn-edit"
+                  size="sm"
+                  colorPalette="blue"
+                  variant="outline"
+                  ml={2}
+                  onClick={() => setEditingGame(game)}
+                >
+                  Edit Game
+                </Button>
+              </Flex>
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      {editingGame && (
+        <EditGameModal
+          isOpen={!!editingGame}
+          onClose={() => setEditingGame(null)}
+          game={editingGame}
+          onGameUpdated={handleGameUpdated}
+        />
       )}
     </Box>
   );
 }
-
 export default GameList;

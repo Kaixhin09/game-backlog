@@ -6,7 +6,8 @@ import {
   Input,
   Textarea,
   VStack,
-  NativeSelect,
+  Select,
+  createListCollection,
 } from '@chakra-ui/react';
 
 const statusOptions = [
@@ -16,6 +17,14 @@ const statusOptions = [
   { label: 'Dropped', value: 'Dropped' },
 ];
 const platformOptions = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile', 'Other'];
+
+const statusCollection = createListCollection({
+  items: statusOptions,
+});
+
+const platformCollection = createListCollection({
+  items: platformOptions.map((p) => ({ label: p, value: p })),
+});
 
 function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
   const [formData, setFormData] = useState({
@@ -31,6 +40,10 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (field) => (details) => {
+    setFormData({ ...formData, [field]: details.value[0] || '' });
   };
 
   const handleSave = async () => {
@@ -55,53 +68,82 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(e) => !e.open && onClose()}>
       <Portal>
-        <Dialog.Backdrop />
+        <Dialog.Backdrop className="modal-backdrop" />
         <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>Edit Game</Dialog.Title>
+          <Dialog.Content className="edit-modal">
+            <Dialog.Header className="edit-modal-header">
+              <Dialog.Title className="edit-modal-title">Edit Game</Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
+            <Dialog.Body className="edit-modal-body">
               <VStack spacing={3} align="stretch">
                 <Input
+                  className="form-input"
                   name="title"
                   placeholder="Title"
                   value={formData.title}
                   onChange={handleChange}
                 />
-                <NativeSelect.Root>
-                  <NativeSelect.Field
-                    name="platform"
-                    value={formData.platform}
-                    onChange={handleChange}
-                  >
-                    {platformOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </NativeSelect.Field>
-                </NativeSelect.Root>
+
+                <Select.Root
+                  className="form-select-root"
+                  collection={platformCollection}
+                  value={[formData.platform]}
+                  onValueChange={handleSelectChange('platform')}
+                >
+                  <Select.HiddenSelect />
+                  <Select.Control>
+                    <Select.Trigger className="form-select-trigger">
+                      <Select.ValueText placeholder="Select platform" />
+                    </Select.Trigger>
+                    <Select.IndicatorGroup>
+                      <Select.Indicator />
+                    </Select.IndicatorGroup>
+                  </Select.Control>
+                  <Portal>
+                    <Select.Positioner>
+                      <Select.Content className="form-select-content">
+                        {platformCollection.items.map((item) => (
+                          <Select.Item key={item.value} item={item} className="form-select-item">
+                            <Select.ItemText>{item.label}</Select.ItemText>
+                            <Select.ItemIndicator />
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select.Positioner>
+                  </Portal>
+                </Select.Root>
+
+                <Select.Root
+                  className="form-select-root"
+                  collection={statusCollection}
+                  value={[formData.status]}
+                  onValueChange={handleSelectChange('status')}
+                >
+                  <Select.HiddenSelect />
+                  <Select.Control>
+                    <Select.Trigger className="form-select-trigger">
+                      <Select.ValueText placeholder="Select status" />
+                    </Select.Trigger>
+                    <Select.IndicatorGroup>
+                      <Select.Indicator />
+                    </Select.IndicatorGroup>
+                  </Select.Control>
+                  <Portal>
+                    <Select.Positioner>
+                      <Select.Content className="form-select-content">
+                        {statusCollection.items.map((item) => (
+                          <Select.Item key={item.value} item={item} className="form-select-item">
+                            <Select.ItemText>{item.label}</Select.ItemText>
+                            <Select.ItemIndicator />
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select.Positioner>
+                  </Portal>
+                </Select.Root>
+
                 <Input
-                  name="genre"
-                  placeholder="Genre"
-                  value={formData.genre}
-                  onChange={handleChange}
-                />
-                <NativeSelect.Root>
-                  <NativeSelect.Field
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                  >
-                    {statusOptions.map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
-                      </option>
-                    ))}
-                  </NativeSelect.Field>
-                </NativeSelect.Root>
-                <Input
+                  className="form-input"
                   name="rating"
                   type="number"
                   placeholder="Rating (0-10)"
@@ -111,6 +153,7 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
                   max={10}
                 />
                 <Input
+                  className="form-input"
                   name="hoursPlayed"
                   type="number"
                   placeholder="Hours played"
@@ -119,6 +162,7 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
                   min={0}
                 />
                 <Textarea
+                  className="form-textarea"
                   name="notes"
                   placeholder="Notes"
                   value={formData.notes}
@@ -126,15 +170,15 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
                 />
               </VStack>
             </Dialog.Body>
-            <Dialog.Footer>
-              <Button variant="outline" mr={3} onClick={onClose}>
+            <Dialog.Footer className="edit-modal-footer">
+              <Button className="btn-cancel" variant="outline" mr={3} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorPalette="purple" loading={submitting} onClick={handleSave}>
+              <Button className="btn-save" colorPalette="purple" loading={submitting} onClick={handleSave}>
                 Save Changes
               </Button>
             </Dialog.Footer>
-            <Dialog.CloseTrigger />
+            <Dialog.CloseTrigger className="modal-close" />
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

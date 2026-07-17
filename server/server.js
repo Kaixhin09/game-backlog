@@ -11,6 +11,9 @@ app.use(express.json());
 const gamesRouter = require('./routes/games');
 app.use('/api/games', gamesRouter);
 
+const coverSearchRoutes = require("./routes/gamecoverSearch");
+app.use("/api/cover-search", coverSearchRoutes);
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Connected to MongoDB');
