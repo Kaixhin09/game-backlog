@@ -7,6 +7,8 @@ const statusOptions = [
     { label: 'Completed', value: 'Completed' },
     { label: 'Dropped', value: 'Dropped' }
 ]
+const platformOptions = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile', 'Other']
+
 
 function GameForm({ onGameAdded }) {
     const [formData, setFormData] = useState({
@@ -77,12 +79,23 @@ function GameForm({ onGameAdded }) {
                         <Box as="label" display="block" mb={2}>
                             Platform
                         </Box>
-                        <Input
+                        <Box
+                            as="select"
                             name="platform"
                             value={formData.platform}
                             onChange={handleChange}
-                            required
-                        />
+                            width="100%"
+                            padding="0.5rem"
+                            borderWidth="1px"
+                            borderRadius="md"
+                        >
+                            <option value="">Select a platform</option>
+                            {platformOptions.map((platform) => (
+                                <option key={platform} value={platform}>
+                                    {platform}
+                                </option>
+                            ))}
+                        </Box>
                     </Box>
                     <Box w="100%">
                         <Box as="label" display="block" mb={2}>
