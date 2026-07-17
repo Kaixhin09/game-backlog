@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Heading, Flex, Text, Spinner, Badge, Button, Input} from '@chakra-ui/react';
 import GameForm from './GameForm.jsx';
 import EditGameModal from './EditGameModal.jsx';
+import StatsDashboard from './StatsDashboard.jsx';
 
 const statusOptions = [
   { label: 'Not Started', value: 'Not Started' },
@@ -125,6 +126,7 @@ function GameList() {
 return (
     <Box className="backlog-container" p={4}>
       <Heading as="h2" size="lg" mb={4} className="backlog-title">My Game Backlog</Heading>
+      <StatsDashboard games={games} />
       <GameForm onGameAdded={handleGameAdded} />
 
       <Input
