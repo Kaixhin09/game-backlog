@@ -42,7 +42,7 @@ A full-stack MERN application for tracking your video game backlog — add games
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/game-backlog-tracker.git
+git clone https://github.com/Kaixhin09/game-backlog-tracker.git
 cd game-backlog-tracker
 ```
 
