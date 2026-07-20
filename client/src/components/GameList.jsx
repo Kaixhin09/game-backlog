@@ -4,6 +4,8 @@ import GameForm from './GameForm.jsx';
 import EditGameModal from './EditGameModal.jsx';
 import StatsDashboard from './StatsDashboard.jsx';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const statusOptions = [
   { label: 'Not Started', value: 'Not Started' },
   { label: 'In Progress', value: 'In Progress' },
@@ -43,7 +45,7 @@ function GameList() {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/games');
+        const res = await fetch(`${API_URL}/api/games`);
         if (!res.ok) throw new Error(`Server responded with ${res.status}`);
         const data = await res.json();
         setGames(data);
@@ -63,7 +65,7 @@ function GameList() {
 
   const handleGameDeleted = async (deletedGameId) => {
     try {
-      await fetch(`http://localhost:5000/api/games/${deletedGameId}`, {
+      await fetch(`${API_URL}/api/games/${deletedGameId}`, {
         method: 'DELETE',
       });
       setGames((prevGames) => prevGames.filter((game) => game._id !== deletedGameId));
@@ -77,7 +79,7 @@ function GameList() {
     const nextStatus = statusOptions[(currentStatusIndex + 1) % statusOptions.length].value;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/games/${game._id}`, {
+      const res = await fetch(`${API_URL}/api/games/${game._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus }),

@@ -1,6 +1,8 @@
 import {useState} from 'react'
 import {Box, Input, Button, Textarea, VStack, Heading} from '@chakra-ui/react'
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const statusOptions = [
     { label: 'Not Started', value: 'Not Started' },
     { label: 'In Progress', value: 'In Progress' },
@@ -27,7 +29,7 @@ function GameForm({ onGameAdded }) {
 
     const fetchCoverImage = async (title) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/cover-search?title=${encodeURIComponent(title)}`);
+            const res = await fetch(`${API_URL}/api/cover-search?title=${encodeURIComponent(title)}`);
             const data = await res.json();
             return data.coverImage || "";
         } catch (err) {
@@ -42,7 +44,7 @@ function GameForm({ onGameAdded }) {
         try {
             const coverImage = await fetchCoverImage(formData.title);
 
-            const res = await fetch("http://localhost:5000/api/games", {
+            const res = await fetch(`${API_URL}/api/games`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ ...formData, coverImage }),

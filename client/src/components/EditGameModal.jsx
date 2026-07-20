@@ -10,6 +10,8 @@ import {
   createListCollection,
 } from '@chakra-ui/react';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const statusOptions = [
   { label: 'Not Started', value: 'Not Started' },
   { label: 'In Progress', value: 'In Progress' },
@@ -49,7 +51,7 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
   const handleSave = async () => {
     setSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/games/${game._id}`, {
+      const res = await fetch(`${API_URL}/api/games/${game._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

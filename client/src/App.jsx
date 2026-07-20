@@ -9,6 +9,8 @@ import './App.css';
 import { Toaster } from './components/ui/Toaster.jsx';
 import { toaster } from './components/ui/Toaster.jsx';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +19,7 @@ function App() {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/games');
+        const res = await fetch(`${API_URL}/api/games`);
         if (!res.ok) throw new Error(`Server responded with ${res.status}`);
         const data = await res.json();
         setGames(data);
@@ -42,7 +44,7 @@ function App() {
   const handleGameDeleted = async (id) => {
     const deletedGame = games.find((g) => g._id === id);
     try {
-      await fetch(`http://localhost:5000/api/games/${id}`, { method: 'DELETE' });
+      await fetch(`${API_URL}/api/games/${id}`, { method: 'DELETE' });
       setGames((prev) => prev.filter((g) => g._id !== id));
       toaster.create({
         title: 'Game Deleted',
@@ -69,7 +71,7 @@ function App() {
     const currentIndex = statusOptions.indexOf(game.status);
     const nextStatus = statusOptions[(currentIndex + 1) % statusOptions.length];
     try {
-      const res = await fetch(`http://localhost:5000/api/games/${game._id}`, {
+      const res = await fetch(`${API_URL}/api/games/${game._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus }),
