@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 // GET a single game by ID
 router.get('/:id', async (req, res) => {
     try {
-        const game = await Game.findOne({ _id: req.params.id, UserId: req.userId });
+        const game = await Game.findOne({ _id: req.params.id, userId: req.userId });
         if (!game) {
             return res.status(404).json({ message: 'Game not found' });
         }
@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
 // POST a new game
 router.post('/', async (req, res) => {
     try {
-        const newGame = new Game({ ...req.body, UserId: req.userId });
+        const newGame = new Game({ ...req.body, userId: req.userId });
         const savedGame = await newGame.save();
         res.status(201).json(savedGame);
     } catch (err) {
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const updatedGame = await Game.findByIdAndUpdate(
-            { _id: req.params.id, UserId: req.userId },
+            { _id: req.params.id, userId: req.userId },
             req.body,
             { new: true, runValidators: true }
         );
@@ -57,7 +57,7 @@ router.put('/:id', async (req, res) => {
 // DELETE a game by ID
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedGame = await Game.findByIdAndDelete({ _id: req.params.id, UserId: req.userId });
+        const deletedGame = await Game.findByIdAndDelete({ _id: req.params.id, userId: req.userId });
         if (!deletedGame) {
             return res.status(404).json({ message: 'Game not found' });
         }
