@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import StatsDashboard from '../components/StatsDashboard.jsx';
+import StatsDashboard from '../components/statsDashboard.jsx';
 
 function DashboardPage({ games }) {
   return (
