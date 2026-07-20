@@ -4,9 +4,9 @@ const Game = require('../models/Game');
 const authMiddleware = require('../middleware/auth');
 
 // GET all games
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
     try {
-        const games = await Game.find({ UserId: req.userId }).sort({ createdAt: -1 });
+        const games = await Game.find({ userId: req.userId }).sort({ createdAt: -1 });
         res.json(games);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET a single game by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
     try {
         const game = await Game.findOne({ _id: req.params.id, userId: req.userId });
         if (!game) {
@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST a new game
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     try {
         const newGame = new Game({ ...req.body, userId: req.userId });
         const savedGame = await newGame.save();
@@ -38,9 +38,9 @@ router.post('/', async (req, res) => {
 });
 
 // PUT (update) a game by ID
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     try {
-        const updatedGame = await Game.findByIdAndUpdate(
+        const updatedGame = await Game.findOneAndUpdate(
             { _id: req.params.id, userId: req.userId },
             req.body,
             { new: true, runValidators: true }
@@ -55,9 +55,9 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE a game by ID
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        const deletedGame = await Game.findByIdAndDelete({ _id: req.params.id, userId: req.userId });
+        const deletedGame = await Game.findOneAndDelete({ _id: req.params.id, userId: req.userId });
         if (!deletedGame) {
             return res.status(404).json({ message: 'Game not found' });
         }
