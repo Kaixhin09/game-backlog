@@ -30,7 +30,7 @@ const gameSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    userId: {
+    UserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
