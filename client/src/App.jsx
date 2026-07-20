@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Spinner, Flex, Text } from '@chakra-ui/react';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar.jsx';
+import Navbar from './components/NavBar.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import GameListPage from './pages/GameListPage.jsx';
 import AddGamePage from './pages/AddGamePage.jsx';
