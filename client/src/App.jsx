@@ -126,7 +126,7 @@ function App() {
     <Box minH="100vh" color="textPrimary" fontFamily="body">
       <Toaster />
       <Navbar />
-      <Box maxW="900px" mx="auto" p={8}>
+      <Box maxW="900px" mx="auto" p={{base: 4, md: 8}}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

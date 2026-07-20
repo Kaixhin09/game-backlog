@@ -74,7 +74,7 @@ function StatsDashboard({ games }) {
         </Box>
       </SimpleGrid>
 
-      <Flex className="stats-charts" gap={6} wrap="wrap">
+      <Flex className="stats-charts" gap={6} wrap="wrap" direction={{base: 'column', md: 'row'}}>
         <Box className="chart-box">
           <Text className="chart-title">By Status</Text>
           <ResponsiveContainer width="100%" height={200}>

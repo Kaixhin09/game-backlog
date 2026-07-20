@@ -232,6 +232,7 @@ body {
   background: var(--surface) !important;
   border: 1px solid var(--border) !important;
   border-radius: 12px !important;
+  max-width: 92vw;
 }
 
 .edit-modal-title {
@@ -343,8 +344,9 @@ body {
 .navbar-inner {
   max-width: 900px;
   margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
-
 .navbar-brand {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -353,7 +355,7 @@ body {
 }
 
 .navbar-links {
-  display: flex;
+  flex-wrap: wrap;
 }
 
 .navbar-link {
@@ -416,7 +418,21 @@ body {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 600px) {
+  .navbar{
+    padding: 0.75rem 1rem;
+  }
+  .navbar-links {
+    width: 100%;
+    justify-content: flex-start;
+  }
   .game-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-btn {
+    font-size: 0.72rem !important;
+    padding: 0.3rem 0.6rem !important;
   }
 }

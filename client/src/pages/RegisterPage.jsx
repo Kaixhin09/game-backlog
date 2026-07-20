@@ -26,7 +26,7 @@ function RegisterPage() {
   };
 
   return (
-    <Box className="auth-container" maxW="360px" mx="auto" mt={20}>
+    <Box className="auth-container" maxW="360px" mx="auto" mt={{base: 10, md: 20}}>
       <Heading className="auth-title" size="lg" mb={6}>Create Account</Heading>
       <form onSubmit={handleSubmit}>
         <VStack spacing={4} align="stretch">
