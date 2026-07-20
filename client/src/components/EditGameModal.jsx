@@ -9,6 +9,8 @@ import {
   Select,
   createListCollection,
 } from '@chakra-ui/react';
+import { useAuth } from '../context/AuthContext.jsx';
+
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -29,6 +31,7 @@ const platformCollection = createListCollection({
 });
 
 function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     title: game.title || '',
     platform: game.platform || '',
@@ -53,7 +56,9 @@ function EditGameModal({ game, isOpen, onClose, onGameUpdated }) {
     try {
       const res = await fetch(`${API_URL}/api/games/${game._id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json', 
+          Authorization: `Bearer ${token}` },
         body: JSON.stringify(formData),
       });
       if (!res.ok) throw new Error(`Server responded with ${res.status}`);

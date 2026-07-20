@@ -15,6 +15,9 @@ app.use(express.json());
 const gamesRouter = require('./routes/games');
 app.use('/api/games', gamesRouter);
 
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
 const coverSearchRoutes = require("./routes/gamecoverSearch");
 app.use("/api/cover-search", coverSearchRoutes);
 

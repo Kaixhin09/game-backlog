@@ -1,5 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const links = [
   { to: '/', label: 'Dashboard' },
@@ -8,27 +9,51 @@ const links = [
 ];
 
 function Navbar() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
+
   return (
-    <Box className="navbar">
+     <Box className="navbar">
       <Flex className="navbar-inner" align="center" justify="space-between">
         <NavLink to="/" className="navbar-brand-link">
           <Text className="navbar-brand">Game Backlog</Text>
         </NavLink>
-        <Flex className="navbar-links" gap={2}>
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === '/'}
-              className={({ isActive }) => `navbar-link ${isActive ? 'is-active' : ''}`}
-            >
-              {link.label}
-            </NavLink>
-          ))}
+        <Flex className="navbar-links" align="center" gap={2}>
+          {isAuthenticated ? (
+            <>
+              {links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.to === '/'}
+                  className={({ isActive }) => `navbar-link ${isActive ? 'is-active' : ''}`}
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+              <Text className="navbar-username" ml={3}>{username}</Text>
+              <Button size="sm" className="btn-logout" onClick={handleLogout}>
+                Log Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/login" className={({ isActive }) => `navbar-link ${isActive ? 'is-active' : ''}`}>
+                Log In
+              </NavLink>
+              <NavLink to="/register" className={({ isActive }) => `navbar-link ${isActive ? 'is-active' : ''}`}>
+                Register
+              </NavLink>
+            </>
+          )}
         </Flex>
       </Flex>
     </Box>
   );
 }
-
 export default Navbar;

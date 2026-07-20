@@ -30,6 +30,11 @@ const gameSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    UserId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Game', gameSchema);

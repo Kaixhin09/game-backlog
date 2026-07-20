@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {Box, Input, Button, Textarea, VStack, Heading} from '@chakra-ui/react'
+import { useAuth } from '../context/AuthContext.jsx';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,6 +14,7 @@ const platformOptions = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile
 
 
 function GameForm({ onGameAdded }) {
+    const { token } = useAuth();
     const [formData, setFormData] = useState({
         title: '',
         platform: '',
@@ -46,9 +48,13 @@ function GameForm({ onGameAdded }) {
 
             const res = await fetch(`${API_URL}/api/games`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({ ...formData, coverImage }),
         });
+        if (!res.ok) throw new Error(`Server responded with ${res.status}`);
         const newGame = await res.json();
         onGameAdded(newGame);
         setFormData({
