@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text, Button } from '@chakra-ui/react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -9,7 +9,7 @@ const links = [
 ];
 
 function Navbar() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, username, password } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
