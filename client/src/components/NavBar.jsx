@@ -9,11 +9,11 @@ const links = [
 ];
 
 function Navbar() {
-  const { isAuthenticated, username, password } = useAuth();
+  const { isAuthenticated, username, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout();
     navigate('/login');
   }
 
