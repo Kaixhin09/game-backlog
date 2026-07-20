@@ -327,7 +327,11 @@ body {
   color: var(--text-muted);
   margin-bottom: 0.5rem;
 }
-
+.stats-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 1rem 0;
+}
 /* ---------- NavBar ---------- */
 
 .navbar {

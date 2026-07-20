@@ -39,7 +39,17 @@ function StatsDashboard({ games }) {
     count,
   }));
 
-  if (totalGames === 0) return null;
+  if (totalGames === 0) {
+    return (
+      <Box className="stats-dashboard">
+        <Heading size="md" className="stats-title" mb={2}>Backlog Stats</Heading>
+        <Text className="stats-empty">
+          No games yet — add your first game to see your stats here.
+        </Text>
+      </Box>
+    );
+  }
+  
 
   return (
     <Box className="stats-dashboard">
